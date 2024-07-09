@@ -15,7 +15,7 @@ string GetRandomName()
     return sb.ToString();
 }
 
-void TryCatchPrint(Action a)
+void TryCatch(Action a)
 {
     try { a(); }
     catch (Exception e)
@@ -24,7 +24,10 @@ void TryCatchPrint(Action a)
 #if DEBUG
         Console.WriteLine($"[TRACE]: {e.StackTrace}");
 #endif
-        throw;
+
+        Console.WriteLine("Press enter to exit.");
+        Console.ReadLine();
+        Environment.Exit(1);
     }
 }
 
@@ -44,7 +47,7 @@ while (inPath is null)
 
 Console.WriteLine("Parsing replay file...");
 Replay replay = null!;
-TryCatchPrint(() =>
+TryCatch(() =>
 {
     using FileStream file = new(inPath, FileMode.Open, FileAccess.Read);
     replay = Replay.Load(file);
@@ -69,10 +72,13 @@ while (outPath is null)
 }
 
 Console.WriteLine("Saving...");
-TryCatchPrint(() =>
+TryCatch(() =>
 {
     using FileStream file = new(outPath, FileMode.Create, FileAccess.Write);
     replay.Save(file);
 });
 
 Console.WriteLine("Done!");
+
+Console.WriteLine("Press enter to exit.");
+Console.ReadLine();
